@@ -1,0 +1,32 @@
+---
+#--------------------------------------------------------------------#
+# Here are a few examples of iptable rules you can create:           #
+#                                                                    #
+# 1. Allow ports 80 & 443 to IP 8.8.8.8 with a mandatory comment.    #
+# 2. Allow host google.com complete access to the network.           #
+# 3. Allow 'any' host access to port 80 (not specifying a port will  #
+#    cause the IP rule to be ignored). Change the template at your   #
+#    own risk!                                                       #
+# 4. Allow the IP range 10.0.0.1 to 10.0.0.254 access to said ports. #
+#--------------------------------------------------------------------#
+ansible_iptables_rules:
+  -
+    host: 8.8.8.8
+    port:
+      - 80
+      - 443
+    comment: "GOOGLE DNS OPEN"
+  - 
+    host: google.com
+    comment: "GOOGLE.COM COMPLETELY OPEN"
+  - 
+    host: any
+    port:
+      - 80
+    comment: "PORT 80 OPEN TO THE WORLD"
+  -
+    host: 10.0.0.1-10.0.0.254
+    port:
+      - 789
+    range: true
+    comment: "PORT 789 OPEN FOR RANGE"

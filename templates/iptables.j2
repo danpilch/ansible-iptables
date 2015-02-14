@@ -1,0 +1,33 @@
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -p tcp --tcp-flags ALL NONE -j DROP
+-A INPUT -p tcp ! --syn -m state --state NEW -j DROP
+-A INPUT -p tcp --tcp-flags ALL ALL -j DROP
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+
+{% if ansible_iptables_system_role is defined %}
+# CUSTOM RULES
+{% for component in ansible_iptables_system_role %}
+{% if component.range is defined %}
+-A INPUT -p tcp -m multiport --dport {{ component.port|join(',') }} -m iprange --src-range {{ component.host }} -j ACCEPT -m comment --comment "{{ component.comment }}"
+{% elif component.port is defined and (component.host != "any") %}
+-A INPUT -i eth0 -s {{ component.host }} -p tcp -m multiport --dport {{ component.port|join(',') }} -j ACCEPT -m comment --comment "{{ component.comment }}"
+{% elif (component.port is not defined) and (component.host != "any") %}
+-A INPUT -p tcp -s {{ component.host }} -j ACCEPT -m comment --comment "{{ component.comment }}"
+{% endif %}
+{% if component.port is defined and (component.host == "any") %}
+-A INPUT -p tcp -m multiport --dport {{ component.port|join(',') }} -j ACCEPT -m comment --comment "{{ component.comment }}"
+{% elif component.port is not defined and (component.host == "any") %}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+-A INPUT -j REJECT --reject-with icmp-host-prohibited
+-A FORWARD -j REJECT --reject-with icmp-host-prohibited
+
+COMMIT
+

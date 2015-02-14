@@ -1,0 +1,22 @@
+---
+- name: Ansible-iptables | Ensure iptables is installed (RedHat).
+  yum: 
+    pkg: iptables
+    state: installed
+  when: ansible_os_family == 'RedHat'
+
+- name: Ansible-iptables | Shutdown iptables
+  service:
+    name: iptables
+    state: stopped
+    enabled: yes
+  sudo: yes
+ 
+- name: Ansible-iptables | Copy iptables template
+  template:
+    src: iptables.j2
+    dest: /etc/sysconfig/iptables
+    backup: yes
+  notify: Restart iptables
+  sudo: yes
+
