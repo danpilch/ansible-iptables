@@ -18,7 +18,7 @@ None
   vars_files:
    - group_vars/iptables/iptables_rules.yml
   roles:
-    - role: anbsible-iptables
+    - role: ansible-iptables
       ansible_iptables_system_role: "{{ example_rules }}"      
 ```
 
