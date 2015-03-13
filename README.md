@@ -29,3 +29,7 @@ MIT / BSD
 ## Author Information
 
 Created by [Dan Pilch](https://github.com/danpilch) [@danpilch](https://twitter.com/danpilch)
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/danpilch/ansible-iptables/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
